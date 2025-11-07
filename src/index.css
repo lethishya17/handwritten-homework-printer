@@ -28,6 +28,9 @@ All colors MUST be HSL.
 
     --accent: 36 95% 55%;
     --accent-foreground: 0 0% 100%;
+    
+    --purple-accent: 280 85% 65%;
+    --purple-deep: 270 70% 50%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
@@ -85,6 +88,9 @@ All colors MUST be HSL.
 
     --accent: 36 95% 60%;
     --accent-foreground: 0 0% 100%;
+    
+    --purple-accent: 280 85% 70%;
+    --purple-deep: 270 70% 55%;
 
     --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 210 40% 98%;

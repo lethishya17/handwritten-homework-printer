@@ -72,10 +72,9 @@ const Index = () => {
                 <span className="text-sm font-medium text-secondary-foreground">AI-Powered Handwriting</span>
               </div>
               
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-foreground">
-                Print Your Homework in{" "}
-                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  Your Handwriting
+              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                <span className="bg-gradient-to-r from-[hsl(var(--purple-deep))] to-[hsl(var(--purple-accent))] bg-clip-text text-transparent">
+                  Print Your Homework in Your Handwriting
                 </span>
               </h1>
               
