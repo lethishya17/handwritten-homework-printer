@@ -9,6 +9,7 @@ import heroImage from "@/assets/hero-image.jpg";
 const Index = () => {
   const [handwritingSample, setHandwritingSample] = useState<File | null>(null);
   const [homeworkText, setHomeworkText] = useState("");
+  const [homeworkPdf, setHomeworkPdf] = useState<File | null>(null);
   const { toast } = useToast();
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,11 +45,22 @@ const Index = () => {
     }
   };
 
+  const handlePdfUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setHomeworkPdf(file);
+      toast({
+        title: "PDF uploaded!",
+        description: `${file.name} has been uploaded successfully.`,
+      });
+    }
+  };
+
   const handleExport = () => {
-    if (!handwritingSample || !homeworkText) {
+    if (!handwritingSample || (!homeworkText && !homeworkPdf)) {
       toast({
         title: "Missing information",
-        description: "Please upload a handwriting sample and enter homework text.",
+        description: "Please upload a handwriting sample and enter homework text or PDF.",
         variant: "destructive",
       });
       return;
@@ -199,12 +211,49 @@ const Index = () => {
                 placeholder="Type or paste your homework content here..."
                 value={homeworkText}
                 onChange={(e) => setHomeworkText(e.target.value)}
-                className="min-h-[300px] text-base resize-none"
+                className="min-h-[200px] text-base resize-none"
+                disabled={!!homeworkPdf}
               />
+
+              <div className="mt-4 flex items-center gap-4">
+                <div className="flex-1 border-t border-border"></div>
+                <span className="text-sm text-muted-foreground">OR</span>
+                <div className="flex-1 border-t border-border"></div>
+              </div>
+
+              <div className="mt-4">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handlePdfUpload}
+                  className="hidden"
+                  id="pdf-upload"
+                />
+                <label htmlFor="pdf-upload">
+                  <Button variant="outline" className="w-full gap-2" asChild>
+                    <span className="cursor-pointer">
+                      <Upload className="w-4 h-4" />
+                      {homeworkPdf ? "Change PDF" : "Upload PDF"}
+                    </span>
+                  </Button>
+                </label>
+              </div>
+
+              {homeworkPdf && (
+                <div className="mt-4 p-4 bg-secondary/50 rounded-lg flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-primary" />
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">{homeworkPdf.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {(homeworkPdf.size / 1024).toFixed(2)} KB
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="mt-6 flex justify-between items-center">
                 <p className="text-sm text-muted-foreground">
-                  {homeworkText.length} characters
+                  {homeworkPdf ? "PDF uploaded" : `${homeworkText.length} characters`}
                 </p>
                 <Button onClick={handleExport} variant="hero" className="gap-2">
                   <Download className="w-4 h-4" />
@@ -215,19 +264,29 @@ const Index = () => {
           </div>
 
           {/* Preview Section */}
-          {homeworkText && handwritingSample && (
+          {(homeworkText || homeworkPdf) && handwritingSample && (
             <Card className="mt-8 p-8">
               <h3 className="text-2xl font-semibold mb-6 text-foreground flex items-center gap-2">
                 <Sparkles className="w-6 h-6 text-primary" />
                 Preview
               </h3>
               <div className="bg-card rounded-lg border-2 border-border p-8 min-h-[200px]">
-                <p className="text-foreground whitespace-pre-wrap font-mono">
-                  {homeworkText}
-                </p>
+                {homeworkPdf ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <FileText className="w-8 h-8 text-primary" />
+                    <div>
+                      <p className="font-medium">{homeworkPdf.name}</p>
+                      <p className="text-sm text-muted-foreground">Ready for 3D printing</p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-foreground whitespace-pre-wrap font-mono">
+                    {homeworkText}
+                  </p>
+                )}
               </div>
               <p className="text-sm text-muted-foreground mt-4 text-center">
-                This is how your text will be converted to match your handwriting style
+                This is how your {homeworkPdf ? "PDF" : "text"} will be converted to match your handwriting style
               </p>
             </Card>
           )}
